@@ -27,3 +27,7 @@ model Member {
 
   @@map("members")
 }
+
+model Test {
+  id String @id @default(uuid())
+}

@@ -19,9 +19,11 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^6.2.1",
+    "bcryptjs": "^2.4.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

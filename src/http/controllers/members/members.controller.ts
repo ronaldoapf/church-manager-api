@@ -40,32 +40,6 @@ export class MembersController {
     return { member }
   }
 
-  @Post()
-  @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createMemberBodySchema))
-  async create(@Body() body: CreateMemberBodySchema) {
-   
-    const { birthDate, email, name, address, phone } = body
-
-    const memberAlreadyExists = await this.membersRepository.findByEmail(email)
-
-    if(memberAlreadyExists) {
-      throw new ConflictException('Member already exists')
-    }
-
-    const member = await this.membersRepository.create({
-      name,
-      email,
-      phone,
-      address,
-      birthDate,
-    })
-
-    return { 
-      member
-    }
-  }
-
   @Put("/:id")
   @HttpCode(200)
   async updateMember(@Param() param: MemberParams, @Body() body: UpdateMemberBodySchema) {

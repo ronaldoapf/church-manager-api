@@ -20,6 +20,7 @@ model Member {
   birthDate DateTime @map("birth_date")
   phone     String?
   address   String
+  password String
 
   status Status @default(ACTIVE)
 

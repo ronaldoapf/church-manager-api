@@ -2,16 +2,15 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import { MembersRepository } from './repositories/members.repository';
 import { PrismaMembersRepository } from './prisma/repositories/prisma-members.repository';
-import { MembersController } from './http/controllers/members';
 import { ConfigModule } from '@nestjs/config';
-import { envSchema } from './env';
+import { MembersController } from './http/controllers/members';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-    validate: (env) => envSchema.parse(env),
-    isGlobal: true,
-  })],
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
+  ],
   exports: [MembersRepository],
   controllers: [MembersController],
   providers: [

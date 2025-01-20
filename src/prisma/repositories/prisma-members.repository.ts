@@ -1,24 +1,38 @@
-import { Injectable } from "@nestjs/common";
-import { Prisma, Member } from "@prisma/client";
-import { PrismaService } from "../prisma.service";
-import { MembersRepository } from "src/repositories/members.repository";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { MembersRepository } from 'src/repositories/members.repository';
+import { Member, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaMembersRepository implements MembersRepository {
-  constructor (private prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(data: Prisma.MemberUncheckedCreateInput): Promise<Member> {
-    const member = await this.prismaService.member.create({
-      data
-    })
-
-    return member
+    return this.prisma.member.create({
+      data,
+    });
   }
 
-  async getAll(): Promise<Member[]> {
-    const members = await this.prismaService.member.findMany()
-
-    return members
+  async findByEmail(email: string): Promise<Member | null> {
+    return this.prisma.member.findUnique({
+      where: { email },
+    });
   }
 
+  async findById(id: string): Promise<Member | null> {
+    return this.prisma.member.findUnique({
+      where: { id },
+    });
+  }
+
+  async update(id: string, data: Prisma.MemberUncheckedUpdateInput): Promise<Member | null> {
+    return this.prisma.member.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async getAll(query?: any): Promise<Member[]> {
+    return this.prisma.member.findMany(query);
+  }
 }

@@ -35,4 +35,12 @@ export class PrismaMembersRepository implements MembersRepository {
   async getAll(query?: any): Promise<Member[]> {
     return this.prisma.member.findMany(query);
   }
+
+  async findManyMembers(filter: Prisma.MemberFindManyArgs): Promise<Member[]> {
+    return this.prisma.member.findMany(filter);
+  }
+
+  async countMembers(filter: Prisma.MemberCountArgs): Promise<number> {
+    return this.prisma.member.count(filter);
+  }
 }

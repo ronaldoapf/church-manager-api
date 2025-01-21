@@ -6,4 +6,6 @@ export abstract class MembersRepository {
   abstract findById(id: string): Promise<Member | null>;
   abstract update(id: string, data: Prisma.MemberUncheckedUpdateInput): Promise<Member | null>;
   abstract getAll(query?: any): Promise<Member[]>;
+  abstract findManyMembers(filter: Prisma.MemberFindManyArgs): Promise<Member[]>;
+  abstract countMembers(filter: Prisma.MemberCountArgs): Promise<number>;
 }

@@ -1,13 +1,14 @@
-// auth.controller.ts
-import { Controller, Post, Body, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import type { LoginDto } from 'src/dtos/login-dto';
-import type { RegisterDto } from 'src/dtos/register-dto';
-
-interface RegisterResponse {
-  newMember: any; 
-  access_token: string;
-}
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common'
+import { AuthService } from './auth.service'
+import type { LoginDto } from 'src/auth/dto/login-dto'
+import { RegisterDto } from './dto/register-dto'
 
 @Controller('auth')
 export class AuthController {
@@ -16,22 +17,20 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
-    const { email, password } = loginDto;
+    const { email, password } = loginDto
 
-    const token = await this.authService.login({ email, password });
+    const token = await this.authService.login({ email, password })
 
     if (!token) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials')
     }
 
-    return { access_token: token.access_token };
+    return { access_token: token.access_token }
   }
 
-  @Post("register")
+  @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() registerDto: RegisterDto): Promise<RegisterResponse> {
-    const { newMember, access_token } = await this.authService.register(registerDto);
-
-    return { newMember, access_token };
+  async register(@Body() registerDto: RegisterDto) {
+    await this.authService.register(registerDto)
   }
 }

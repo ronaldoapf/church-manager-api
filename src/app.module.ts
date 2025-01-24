@@ -1,24 +1,33 @@
-import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma/prisma.service';
-import { MembersRepository } from './repositories/members.repository';
-import { PrismaMembersRepository } from './prisma/repositories/prisma-members.repository';
-import { ConfigModule } from '@nestjs/config';
-import { MembersController } from './http/controllers/members';
-import { AuthModule } from './auth/auth.module';
+import { Module } from '@nestjs/common'
+import { PrismaService } from './prisma/prisma.service'
+import { ConfigModule } from '@nestjs/config'
+import { AuthModule } from './auth/auth.module'
+import { APP_FILTER, APP_PIPE } from '@nestjs/core'
+import { ValidationPipe } from './pipes/validation-pipe'
+import { MemberModule } from './member/member.module'
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup'
+import { SentryTestModule } from './sentry/sentry.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    SentryModule.forRoot(),
     AuthModule,
+    MemberModule,
+    SentryTestModule,
   ],
-  exports: [MembersRepository],
-  controllers: [MembersController],
+  exports: [],
+  controllers: [],
   providers: [
-    PrismaService,
     {
-      provide: MembersRepository,
-      useClass: PrismaMembersRepository,
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
     },
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
+    PrismaService,
   ],
 })
 export class AppModule {}

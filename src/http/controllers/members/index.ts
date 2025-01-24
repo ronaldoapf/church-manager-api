@@ -1,1 +1,0 @@
-export { MembersController } from './members.controller'

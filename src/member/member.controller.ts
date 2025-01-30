@@ -7,12 +7,17 @@ import {
   Param,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { MemberService } from './member.service'
 import { UpdateMemberDto } from './dto/UpdateMemberDto'
 import { MemberParamDto } from './dto/MemberParamDto'
 import { MemberFilterDto } from './dto/MemberFilterDto'
+import { ApiTags } from '@nestjs/swagger'
+import { AuthGuard } from 'src/auth/auth.guard'
 
+@ApiTags('members')
+@UseGuards(AuthGuard)
 @Controller('/members')
 export class MemberController {
   constructor(private memberService: MemberService) {}
@@ -35,6 +40,17 @@ export class MemberController {
     return { member }
   }
 
+  @Delete('/:id')
+  @HttpCode(200)
+  async deleteMember(@Param() param: MemberParamDto) {
+    const { id } = param
+
+    await this.memberService.update({
+      id,
+      status: 'INACTIVE',
+    })
+  }
+
   @Put('/:id')
   @HttpCode(200)
   async updateMember(
@@ -55,17 +71,6 @@ export class MemberController {
     })
 
     return { member }
-  }
-
-  @Delete('/:id')
-  @HttpCode(200)
-  async deleteMember(@Param() param: MemberParamDto) {
-    const { id } = param
-
-    await this.memberService.update({
-      id,
-      status: 'INACTIVE',
-    })
   }
 
   @Put('/:id/activate')

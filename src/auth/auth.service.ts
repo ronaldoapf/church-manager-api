@@ -55,6 +55,8 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    const birthMonth = new Date(birthDate).getMonth() + 1
+
     await this.membersService.create({
       name,
       email,
@@ -62,6 +64,7 @@ export class AuthService {
       birthDate,
       address,
       phone,
+      birthMonth,
     })
   }
 

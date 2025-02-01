@@ -15,12 +15,13 @@ enum Status {
 model Member {
   id String @id @default(uuid())
 
-  name      String
-  email     String   @unique
-  birthDate DateTime @map("birth_date")
-  phone     String?
-  address   String
-  password String
+  name       String
+  email      String   @unique
+  birthDate  DateTime @map("birth_date")
+  birthMonth Int      @map("birth_month")
+  phone      String?
+  address    String
+  password   String
 
   status Status @default(ACTIVE)
 

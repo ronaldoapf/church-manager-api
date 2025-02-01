@@ -3,10 +3,11 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { UpdateMemberDto } from './dto/UpdateMemberDto'
 import { MemberFilterDto } from './dto/MemberFilterDto'
 import { Prisma, Status } from '@prisma/client'
+import { calculatePagination } from 'src/utils/calculate-pagination'
 
 interface FindManyAndCountProps {
   status?: Status
-  startBirthDate?: Date
+  birthMonth?: number
   endBirthDate?: Date
 }
 
@@ -23,9 +24,10 @@ export class MemberService {
   }
 
   async findManyAndCount(filter: MemberFilterDto) {
-    const { page, status, startBirthDate, endBirthDate, limit } = filter
+    const { page, status, birthDate, limit } = filter
 
-    const skip = (page - 1) * limit
+    const { skip } = calculatePagination({ page, limit })
+
     const omit = {
       password: true,
     }
@@ -34,9 +36,9 @@ export class MemberService {
 
     if (status) where.status = status
 
-    if (startBirthDate) where.startBirthDate = startBirthDate
-
-    if (endBirthDate) where.endBirthDate = endBirthDate
+    if (birthDate) {
+      where.birthMonth = new Date(birthDate).getMonth() + 1
+    }
 
     const [data, total] = await Promise.all([
       this.prismaService.member.findMany({

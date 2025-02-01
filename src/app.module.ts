@@ -7,14 +7,20 @@ import { ValidationPipe } from './pipes/validation-pipe'
 import { MemberModule } from './member/member.module'
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup'
 import { SentryTestModule } from './sentry/sentry.module'
+import { AuthorizationModule } from './authorization/authorization.module'
+import { envSchema } from './env'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      validate: (env) => envSchema.parse(env),
+      isGlobal: true,
+    }),
     SentryModule.forRoot(),
     AuthModule,
     MemberModule,
     SentryTestModule,
+    AuthorizationModule,
   ],
   exports: [],
   controllers: [],

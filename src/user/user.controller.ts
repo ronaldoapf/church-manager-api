@@ -9,43 +9,43 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
-import { MemberService } from './member.service'
-import { UpdateMemberDto } from './dto/UpdateMemberDto'
-import { MemberParamDto } from './dto/MemberParamDto'
-import { MemberFilterDto } from './dto/MemberFilterDto'
+import { UserService } from './user.service'
+import { UserParamDto } from './dto/user-param-dto'
 import { ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from 'src/auth/auth.guard'
+import { UserFilterDto } from './dto/user-filter-dto'
+import { UpdateUserDto } from './dto/update-user-dto'
 
 @ApiTags('members')
 @UseGuards(AuthGuard)
 @Controller('/members')
-export class MemberController {
-  constructor(private memberService: MemberService) {}
+export class UserController {
+  constructor(private userService: UserService) {}
 
   @Get()
   @HttpCode(200)
-  async getMembers(@Query() filter: MemberFilterDto) {
-    const members = await this.memberService.findManyAndCount(filter)
+  async getMembers(@Query() filter: UserFilterDto) {
+    const members = await this.userService.findManyAndCount(filter)
 
     return { members }
   }
 
   @Get('/:id')
   @HttpCode(200)
-  async getMember(@Param() param: MemberParamDto) {
+  async getMember(@Param() param: UserParamDto) {
     const { id } = param
 
-    const member = await this.memberService.findById(id)
+    const member = await this.userService.findById(id)
 
     return { member }
   }
 
   @Delete('/:id')
   @HttpCode(200)
-  async deleteMember(@Param() param: MemberParamDto) {
+  async deleteMember(@Param() param: UserParamDto) {
     const { id } = param
 
-    await this.memberService.update({
+    await this.userService.update({
       id,
       status: 'INACTIVE',
     })
@@ -54,14 +54,14 @@ export class MemberController {
   @Put('/:id')
   @HttpCode(200)
   async updateMember(
-    @Param() param: MemberParamDto,
-    @Body() body: UpdateMemberDto,
+    @Param() param: UserParamDto,
+    @Body() body: UpdateUserDto,
   ) {
     const { id } = param
 
     const { email, address, birthDate, name, phone } = body
 
-    const member = await this.memberService.update({
+    const member = await this.userService.update({
       id,
       name,
       phone,
@@ -75,10 +75,10 @@ export class MemberController {
 
   @Put('/:id/activate')
   @HttpCode(200)
-  async activateMember(@Param() param: MemberParamDto) {
+  async activateMember(@Param() param: UserParamDto) {
     const { id } = param
 
-    await this.memberService.update({
+    await this.userService.update({
       id,
       status: 'ACTIVE',
     })

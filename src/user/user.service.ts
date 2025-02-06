@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { UpdateMemberDto } from './dto/UpdateMemberDto'
-import { MemberFilterDto } from './dto/MemberFilterDto'
 import { Prisma, Status } from '@prisma/client'
 import { calculatePagination } from 'src/utils/calculate-pagination'
+import { UserFilterDto } from './dto/user-filter-dto'
+import { UpdateUserDto } from './dto/update-user-dto'
 
 interface FindManyAndCountProps {
   status?: Status
@@ -12,18 +12,18 @@ interface FindManyAndCountProps {
 }
 
 @Injectable()
-export class MemberService {
+export class UserService {
   constructor(private prismaService: PrismaService) {}
 
   async getAll() {
-    return await this.prismaService.member.findMany({
+    return await this.prismaService.user.findMany({
       omit: {
         password: true,
       },
     })
   }
 
-  async findManyAndCount(filter: MemberFilterDto) {
+  async findManyAndCount(filter: UserFilterDto) {
     const { page, status, birthDate, limit } = filter
 
     const { skip } = calculatePagination({ page, limit })
@@ -41,13 +41,13 @@ export class MemberService {
     }
 
     const [data, total] = await Promise.all([
-      this.prismaService.member.findMany({
+      this.prismaService.user.findMany({
         skip,
         omit,
         where,
         take: limit,
       }),
-      this.prismaService.member.count({ where }),
+      this.prismaService.user.count({ where }),
     ])
 
     return {
@@ -60,7 +60,7 @@ export class MemberService {
   }
 
   async findById(id: string) {
-    return await this.prismaService.member.findUnique({
+    return await this.prismaService.user.findUnique({
       where: {
         id,
       },
@@ -71,21 +71,21 @@ export class MemberService {
   }
 
   async findByEmail(email: string) {
-    return this.prismaService.member.findUnique({
+    return this.prismaService.user.findUnique({
       where: { email },
     })
   }
 
-  async create(data: Prisma.MemberUncheckedCreateInput) {
-    return this.prismaService.member.create({
+  async create(data: Prisma.UserUncheckedCreateInput) {
+    return this.prismaService.user.create({
       data,
     })
   }
 
-  async update(data: UpdateMemberDto) {
+  async update(data: UpdateUserDto) {
     const { id } = data
 
-    return await this.prismaService.member.update({
+    return await this.prismaService.user.update({
       where: {
         id,
       },

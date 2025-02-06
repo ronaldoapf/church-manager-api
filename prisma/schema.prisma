@@ -12,9 +12,18 @@ enum Status {
   INACTIVE
 }
 
-model Member {
-  id String @id @default(uuid())
+enum Role {
+  ADMIN
+  MEMBER
+}
 
+enum TokenType {
+  PASSWORD_RECOVERY
+}
+
+model User {
+  id         String   @id @default(uuid())
+  role       Role     @default(MEMBER)
   name       String
   email      String   @unique
   birthDate  DateTime @map("birth_date")
@@ -28,5 +37,19 @@ model Member {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("members")
+  tokens Token[]
+
+  @@map("users")
+}
+
+model Token {
+  id   String    @id @default(uuid())
+  type TokenType
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("tokens")
 }

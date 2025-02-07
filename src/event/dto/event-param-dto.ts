@@ -13,5 +13,4 @@ export class EventParamDto {
   constructor(id: string) {
     this.id = id
   }
-  
 }

@@ -10,4 +10,3 @@ import { JwtService } from '@nestjs/jwt';
   providers: [EventService, PrismaService, JwtService, AuthGuard],
 })
 export class EventModule {}
-

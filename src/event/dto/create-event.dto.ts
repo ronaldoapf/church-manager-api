@@ -11,6 +11,7 @@ export class CreateEventDto {
   @IsString()
   name: string;
 
+  
   @ApiProperty({
     type: 'string',
     title: 'Event start date',

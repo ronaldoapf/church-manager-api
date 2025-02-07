@@ -7,6 +7,7 @@ export class UpdateEventDto {
     title: 'Event ID',
     example: '9401a98a-c1bb-4506-8077-6a509741fe21',
   })
+  
   @IsUUID()
   id!: string;
 

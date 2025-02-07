@@ -38,6 +38,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   tokens Token[]
+  eventMembers EventMember[]
 
   @@map("users")
   Event Event[]
@@ -69,4 +70,17 @@ model Event {
 
   createdById String
   createdBy User @relation(fields: [createdById], references: [id])
+
+  eventMembers EventMember[]
+}
+
+model EventMember {
+  id String @id @default(uuid())
+  userId String
+  eventId String
+  user User @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@map("event_members")
+  @@unique([userId, eventId])
 }

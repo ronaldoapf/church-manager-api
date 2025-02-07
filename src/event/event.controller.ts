@@ -56,4 +56,22 @@ export class EventController {
   remove(@Param('id') id: string) {
     return this.eventService.remove(id);
   }
+
+  @Post(':eventId/members/:userId')
+  @HttpCode(HttpStatus.CREATED)
+  async addMember(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return await this.eventService.addMember(eventId, userId);
+  }
+
+  @Delete(':eventId/members/:userId')
+  @HttpCode(HttpStatus.OK)
+  async removeMember(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return await this.eventService.removeMember(eventId, userId);
+  }
 }

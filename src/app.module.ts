@@ -9,6 +9,7 @@ import { SentryTestModule } from './sentry/sentry.module'
 import { envSchema } from './env'
 import { TokenService } from './token/token.service'
 import { UserModule } from './user/user.module'
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module'
     AuthModule,
     UserModule,
     SentryTestModule,
+    EventModule,
   ],
   exports: [],
   controllers: [],

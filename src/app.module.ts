@@ -10,6 +10,7 @@ import { envSchema } from './env'
 import { TokenService } from './token/token.service'
 import { UserModule } from './user/user.module'
 import { EventModule } from './event/event.module';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { EventModule } from './event/event.module';
     UserModule,
     SentryTestModule,
     EventModule,
+    DepartmentModule,
   ],
   exports: [],
   controllers: [],

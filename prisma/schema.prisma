@@ -40,6 +40,8 @@ model User {
   tokens Token[]
   eventMembers EventMember[]
 
+  departments Department[] @relation("UserDepartments")
+
   @@map("users")
   Event Event[]
 }
@@ -72,6 +74,8 @@ model Event {
   createdBy User @relation(fields: [createdById], references: [id])
 
   eventMembers EventMember[]
+
+  departments Department[] @relation("DepartmentEvents")
 }
 
 model EventMember {
@@ -83,4 +87,18 @@ model EventMember {
 
   @@map("event_members")
   @@unique([userId, eventId])
+}
+
+model Department {
+  id String @id @default(uuid())
+  name String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[] @relation("UserDepartments")
+
+  events Event[] @relation("DepartmentEvents")
+
+  @@map("departments")
 }

@@ -6,8 +6,10 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs'
 import { LoginDto } from 'src/auth/dto/login-dto'
-import { MemberService } from 'src/member/member.service'
+import { UserService } from 'src/user/user.service'
 import { RegisterDto } from './dto/register-dto'
+import { TokenService } from 'src/token/token.service'
+import { ResetPasswordDto } from './dto/reset-password-dto'
 
 interface PayloadSub {
   sub: string
@@ -18,7 +20,8 @@ interface PayloadSub {
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly membersService: MemberService,
+    private readonly tokenService: TokenService,
+    private readonly membersService: UserService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -76,5 +79,44 @@ export class AuthService {
     }
 
     return member
+  }
+
+  async requestPasswordReset(email: string) {
+    const userFromEmail = await this.membersService.findByEmail(email)
+
+    if (!userFromEmail) {
+      throw new UnauthorizedException('User not found')
+    }
+
+    const { id } = await this.tokenService.create(userFromEmail.id)
+
+    return { id }
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { code, password } = resetPasswordDto
+
+    const tokenFromCode = await this.tokenService.findByToken(code)
+
+    if (!tokenFromCode) {
+      throw new UnauthorizedException('Invalid token')
+    }
+
+    const { createdAt, userId } = tokenFromCode
+
+    const TEN_MINUTES_IN_MS = 1000 * 60 * 10
+
+    const actualDate = new Date()
+
+    if (actualDate.getTime() - createdAt.getTime() > TEN_MINUTES_IN_MS) {
+      throw new UnauthorizedException('Token expired')
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await this.membersService.update({
+      id: userId,
+      password: hashedPassword,
+    })
   }
 }

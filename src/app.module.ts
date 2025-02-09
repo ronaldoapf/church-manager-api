@@ -4,11 +4,13 @@ import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from './auth/auth.module'
 import { APP_FILTER, APP_PIPE } from '@nestjs/core'
 import { ValidationPipe } from './pipes/validation-pipe'
-import { MemberModule } from './member/member.module'
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup'
 import { SentryTestModule } from './sentry/sentry.module'
-import { AuthorizationModule } from './authorization/authorization.module'
 import { envSchema } from './env'
+import { TokenService } from './token/token.service'
+import { UserModule } from './user/user.module'
+import { EventModule } from './event/event.module';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -18,9 +20,10 @@ import { envSchema } from './env'
     }),
     SentryModule.forRoot(),
     AuthModule,
-    MemberModule,
+    UserModule,
     SentryTestModule,
-    AuthorizationModule,
+    EventModule,
+    DepartmentModule,
   ],
   exports: [],
   controllers: [],
@@ -34,6 +37,8 @@ import { envSchema } from './env'
       useClass: SentryGlobalFilter,
     },
     PrismaService,
+    TokenService,
   ],
 })
 export class AppModule {}
+

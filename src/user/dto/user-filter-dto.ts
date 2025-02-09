@@ -3,10 +3,10 @@ import { Status } from '@prisma/client'
 import { IsDateString, IsEnum, IsOptional } from 'class-validator'
 import { PaginationDto } from 'src/common/dtos/pagination-dto'
 
-export class MemberFilterDto extends PaginationDto {
+export class UserFilterDto extends PaginationDto {
   @ApiProperty({
     type: 'string',
-    description: 'Member birth date',
+    description: 'User birth date',
     example: '1997-08-24T03:10:40.700Z',
   })
   @IsOptional()
@@ -16,7 +16,7 @@ export class MemberFilterDto extends PaginationDto {
   @ApiPropertyOptional({
     type: 'array',
     enum: ['ACTIVE', 'INACTIVE'],
-    description: 'Member status',
+    description: 'User status',
     example: 'ACTIVE',
     default: 'ACTIVE',
   })

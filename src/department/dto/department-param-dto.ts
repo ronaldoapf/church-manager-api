@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsUUID } from 'class-validator'
+import { ApiProperty } from "@nestjs/swagger"
+import { IsUUID } from "class-validator"
 
-export class MemberParamDto {
+export class DepartmentParamDto {
   @ApiProperty({
     type: 'string',
-    title: 'Member ID',
+    title: 'Event ID',
     example: '9401a98a-c1bb-4506-8077-6a509741fe21',
   })
   @IsUUID()

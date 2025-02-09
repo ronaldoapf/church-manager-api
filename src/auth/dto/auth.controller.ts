@@ -9,13 +9,14 @@ import {
   Get,
   Req,
 } from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { RegisterDto } from './dto/register-dto'
-import { LoginDto } from './dto/login-dto'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
-import { AuthGuard } from './auth.guard'
-import { PasswordRecoveryDto } from './dto/password-recovery-dto'
-import { ResetPasswordDto } from './dto/reset-password-dto'
+import type { AuthService } from '../auth.service'
+import { LoginDto } from './login-dto'
+import { RegisterDto } from './register-dto'
+import { AuthGuard } from '../auth.guard'
+import { PasswordRecoveryDto } from './password-recovery-dto'
+import { ResetPasswordDto } from './reset-password-dto'
+
 
 @ApiTags('auth')
 @Controller('/auth')

@@ -12,9 +12,18 @@ enum Status {
   INACTIVE
 }
 
-model Member {
-  id String @id @default(uuid())
+enum Role {
+  ADMIN
+  MEMBER
+}
 
+enum TokenType {
+  PASSWORD_RECOVERY
+}
+
+model User {
+  id         String   @id @default(uuid())
+  role       Role     @default(MEMBER)
   name       String
   email      String   @unique
   birthDate  DateTime @map("birth_date")
@@ -28,5 +37,68 @@ model Member {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("members")
+  tokens Token[]
+  eventMembers EventMember[]
+
+  departments Department[] @relation("UserDepartments")
+
+  @@map("users")
+  Event Event[]
+}
+
+model Token {
+  id   String    @id @default(uuid())
+  type TokenType
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+model Event {
+  id         String   @id @default(uuid())
+  name String 
+  startDate DateTime
+  endDate DateTime
+  location String
+  description String?
+  type String
+  isActive Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  eventMembers EventMember[]
+
+  departments Department[] @relation("DepartmentEvents")
+}
+
+model EventMember {
+  id String @id @default(uuid())
+  userId String
+  eventId String
+  user User @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@map("event_members")
+  @@unique([userId, eventId])
+}
+
+model Department {
+  id String @id @default(uuid())
+  name String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[] @relation("UserDepartments")
+
+  events Event[] @relation("DepartmentEvents")
+
+  @@map("departments")
 }

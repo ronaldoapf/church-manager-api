@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Status } from '@prisma/client'
 import { IsEmail, IsEnum, IsString, IsUUID } from 'class-validator'
 
-export class UpdateMemberDto {
+export class UpdateUserDto {
   @ApiProperty({
     type: 'string',
     title: 'Member ID',
@@ -10,6 +10,13 @@ export class UpdateMemberDto {
   })
   @IsUUID()
   id: string
+
+  @ApiProperty({
+    type: 'string',
+    title: 'User password',
+  })
+  @IsString()
+  password?: string
 
   @ApiPropertyOptional({
     type: 'string',
@@ -61,6 +68,7 @@ export class UpdateMemberDto {
 
   constructor(
     id: string,
+    password: string,
     name: string,
     email: string,
     address: string,
@@ -69,6 +77,7 @@ export class UpdateMemberDto {
     status: Status,
   ) {
     this.id = id
+    if (password) this.password = password
     if (name) this.name = name
     if (email) this.email = email
     if (address) this.address = address

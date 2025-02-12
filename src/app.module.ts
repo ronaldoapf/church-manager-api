@@ -11,6 +11,7 @@ import { TokenService } from './token/token.service'
 import { UserModule } from './user/user.module'
 import { EventModule } from './event/event.module';
 import { DepartmentModule } from './department/department.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DepartmentModule } from './department/department.module';
     SentryTestModule,
     EventModule,
     DepartmentModule,
+    EmailModule,
   ],
   exports: [],
   controllers: [],

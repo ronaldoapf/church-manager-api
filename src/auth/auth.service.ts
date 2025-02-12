@@ -26,26 +26,31 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto
-
+  
     const member = await this.membersService.findByEmail(email)
-
+  
     if (!member) {
       throw new UnauthorizedException('Invalid credentials')
     }
 
+    if (!member.password) {
+      throw new UnauthorizedException('Password is missing')
+    }
+  
     const isPasswordValid = await bcrypt.compare(password, member.password)
-
+  
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials')
     }
-
+  
     const payload: PayloadSub = { sub: member.id, email: member.email }
     const accessToken = await this.jwtService.signAsync(payload)
-
+  
     return {
       access_token: accessToken,
     }
   }
+  
 
   async register(registerDto: RegisterDto) {
     const { email, password, name, birthDate, address, phone } = registerDto

@@ -22,29 +22,34 @@ enum TokenType {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  role       Role     @default(MEMBER)
-  name       String
-  email      String   @unique
-  birthDate  DateTime @map("birth_date")
-  birthMonth Int      @map("birth_month")
-  phone      String?
-  address    String
-  password   String
+  id                   String   @id @default(uuid())
+  role                 Role     @default(MEMBER)
+  name                 String?
+  email                String   @unique
+  birthDate            DateTime?
+  birthMonth           Int?
+  phone                String?
+  address              String?
+  password             String?
 
-  status Status @default(ACTIVE)
+  status               Status   @default(ACTIVE)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
 
-  tokens Token[]
-  eventMembers EventMember[]
+  tokens               Token[]
+  eventMembers         EventMember[]
 
-  departments Department[] @relation("UserDepartments")
+  departments          Department[] @relation("UserDepartments")
+
+  verificationCode     String?   
+  verificationExpiresAt DateTime?
+  verificationSender String? 
 
   @@map("users")
   Event Event[]
 }
+
 
 model Token {
   id   String    @id @default(uuid())
